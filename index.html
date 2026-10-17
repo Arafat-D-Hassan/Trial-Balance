@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ডেবিট–ক্রেডিট মাস্টার</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eaf0ee;--card:#fff;--ink:#102a25;--dim:#5a726b;--line:#c9d8d2;--dr:#3446c9;--cr:#c2410c;--ok:#157a43;--bad:#b3261e;--okbg:#e2f4e9;--badbg:#fbe7e5;--hi:#0f766e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1513;--card:#14231e;--ink:#e3f1ec;--dim:#8fa8a0;--line:#2a413a;--dr:#8d9bff;--cr:#ff9a68;--ok:#5fd592;--bad:#ff8a80;--okbg:#13301f;--badbg:#3a1a18;--hi:#4fd1c5}}
+:root[data-theme="dark"]{--bg:#0b1513;--card:#14231e;--ink:#e3f1ec;--dim:#8fa8a0;--line:#2a413a;--dr:#8d9bff;--cr:#ff9a68;--ok:#5fd592;--bad:#ff8a80;--okbg:#13301f;--badbg:#3a1a18;--hi:#4fd1c5}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"Noto Sans Bengali","Kohinoor Bangla","Nirmala UI",system-ui,sans-serif;line-height:1.6}
+main{max-width:600px;margin:0 auto;padding:16px 16px 40px}
+h1{font-size:30px;font-weight:800;margin:4px 0}h2{font-size:19px;margin:20px 0 6px}
+p{margin:6px 0}.dim{color:var(--dim);font-size:14px}.hide{display:none!important}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}
+button{font:inherit;cursor:pointer;border:0;border-radius:14px;color:inherit;background:none}
+button:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.go{width:100%;background:var(--ink);color:var(--bg);font-weight:600;font-size:18px;padding:14px;margin-top:8px}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode{background:var(--card);border:2px solid var(--line);padding:12px;text-align:left}
+.mode b{display:block;font-size:16px}.mode span{font-size:12.5px;color:var(--dim);line-height:1.4;display:block}
+.mode.on{border-color:var(--hi)}
+.sw{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px}
+.sw input{width:22px;height:22px;accent-color:var(--hi)}
+.rules{display:grid;grid-template-columns:1fr auto auto;gap:3px 16px;font-size:14px}.rules b{font-weight:600}.rules .h{color:var(--dim);font-size:12px}
+.top{display:flex;justify-content:space-between;font-size:14px;color:var(--dim);margin-bottom:8px}
+.bar{height:7px;background:var(--line);border-radius:4px;overflow:hidden;margin-bottom:6px}.bar i{display:block;height:100%;background:var(--hi);transition:width .25s}
+#tb i{background:var(--cr);transition:none}
+.q{padding:22px 14px 18px;text-align:center}
+.q .dt{font-size:13px;color:var(--hi);font-weight:600}
+.q .sit{font-size:16px;color:var(--dim);margin:6px 0}
+.q .nm{font-size:34px;font-weight:800;line-height:1.25;margin:6px 0}
+.q .ask{font-size:15px}
+.tacc{display:grid;grid-template-columns:1fr 1fr;border-top:3px solid var(--ink);position:relative;margin-top:4px;background:var(--card);border-radius:0 0 18px 18px}
+.tacc:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;background:var(--ink);transform:translateX(-50%)}
+.tacc button{padding:30px 8px;font-size:25px;font-weight:800;border-radius:0 0 18px 18px;transition:background .15s}
+.tacc button small{display:block;font-size:12.5px;font-weight:400;color:var(--dim)}
+.tacc .d{color:var(--dr)}.tacc .c{color:var(--cr)}.tacc button:active{background:var(--line)}
+.fb{border-left:6px solid;border-radius:12px;padding:12px;margin:12px 0}.fb.ok{border-color:var(--ok);background:var(--okbg)}.fb.no{border-color:var(--bad);background:var(--badbg)}
+.score{font-size:60px;font-weight:800;text-align:center;line-height:1.1}
+.stat{display:grid;grid-template-columns:110px 1fr 46px;gap:8px;align-items:center;font-size:14px;margin:6px 0}
+.stat .tr{height:9px;background:var(--line);border-radius:5px;overflow:hidden}.stat .tr i{display:block;height:100%;background:var(--hi)}
+.flt{display:flex;gap:8px;margin:8px 0}.flt button{border:1px solid var(--line);padding:6px 14px;font-size:14px;background:var(--card)}.flt .on{border-color:var(--hi);color:var(--hi);font-weight:600}
+.rev{border-left:6px solid;border-radius:12px;padding:10px 12px;margin:10px 0}.rev.ok{border-color:var(--ok);background:var(--okbg)}.rev.no{border-color:var(--bad);background:var(--badbg)}
+.tag{font-size:13px;font-weight:600}.ok .tag{color:var(--ok)}.no .tag{color:var(--bad)}.rev .s{font-size:13px;color:var(--dim)}.rev .why{font-size:14px;margin-top:4px}
+.promo{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin:14px 0}
+.promo .av{width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:800;font-size:17px;flex:none}
+.promo .tx{flex:1;font-size:13.5px;line-height:1.45;color:var(--dim)}.promo .tx b{display:block;font-size:15px;color:var(--ink)}
+.promo a{background:var(--ink);color:var(--bg);text-decoration:none;font-weight:600;font-size:14px;padding:9px 14px;border-radius:999px;white-space:nowrap}
+.promo a:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.promo{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;margin:12px 0;text-decoration:none;color:var(--ink)}
+.promo:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.av{flex:none;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--hi),var(--dr));color:#fff;display:grid;place-items:center;font-weight:800;font-size:18px;background-size:cover;background-position:center}
+.pt{flex:1;min-width:0;line-height:1.35}.pt b{display:block;font-size:16px}.pt small{color:var(--dim);font-size:12.5px}
+.fol{flex:none;background:var(--ink);color:var(--bg);font-weight:600;font-size:14px;padding:8px 16px;border-radius:999px}
+.by{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 14px;margin:16px 0;text-decoration:none;color:var(--ink)}
+.by .av{flex:none;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#25f4ee,#fe2c55);color:#fff;font-weight:800;display:grid;place-items:center;font-size:17px;overflow:hidden}
+.by .av img{width:100%;height:100%;object-fit:cover;object-position:center 20%}
+.by small{display:block;color:var(--dim);font-size:12.5px;line-height:1.3}
+.by b{display:block;font-size:16px;line-height:1.3}
+.by .fl{margin-left:auto;background:var(--ink);color:var(--bg);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;white-space:nowrap}
+.by:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+<section id="start">
+  <h1>ডেবিট–ক্রেডিট মাস্টার</h1>
+  <p class="dim">হিসাববিজ্ঞানের জাবেদার জন্য সব ধরনের হিসাব: সম্পদ, দায়, মূলধন, আয়, ব্যয়, সমাপনী ও প্রারম্ভিক মজুদ পণ্য, অবচয়, সঞ্চিতি, বাট্টা, ফেরত ও সমন্বয়। প্রতিটি প্রশ্নে তারিখ ও টাকার অঙ্ক আছে।</p>
+  <h2>মোড বেছে নাও</h2>
+  <div class="modes" id="modes"></div>
+  <div class="card sw"><label for="inst">প্রতিটি উত্তরের পরেই ফলাফল ও কারণ দেখো</label><input type="checkbox" id="inst"></div>
+  <div class="card"><b>নিয়ম</b>
+    <div class="rules" style="margin-top:8px"><span class="h">হিসাব</span><span class="h">বাড়লে</span><span class="h">কমলে</span>
+    <span>সম্পদ (মজুদ, নগদান, দেনাদার)</span><b>ডেবিট</b><b>ক্রেডিট</b>
+    <span>দায় (পাওনাদার, ঋণ)</span><b>ক্রেডিট</b><b>ডেবিট</b>
+    <span>মূলধন, সঞ্চিতি</span><b>ক্রেডিট</b><b>ডেবিট</b>
+    <span>উত্তোলন</span><b>ডেবিট</b><b>ক্রেডিট</b>
+    <span>আয়</span><b>ক্রেডিট</b><b>ডেবিট</b>
+    <span>ব্যয়, ক্রয়</span><b>ডেবিট</b><b>ক্রেডিট</b></div>
+    <p class="dim" style="margin-top:8px">বাণিজ্য হিসাবে: প্রারম্ভিক মজুদ ও ক্রয় ডেবিট পক্ষে, সমাপনী মজুদ ও বিক্রয় ক্রেডিট পক্ষে।</p>
+  </div>
+  <button class="go" id="begin">খেলা শুরু করো</button>
+  <p class="dim" id="best" style="text-align:center"></p>
+  <a class="by" href="https://www.tiktok.com/@arafat_hassan_" target="_blank" rel="noopener noreferrer" aria-label="Created by arafat_hassan_ on TikTok"><span class="av" id="logo"><img src="data:image/jpeg;base64,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" alt="@arafat_hassan_" width="48" height="48"></span><span><small>Created by</small><b>@arafat_hassan_</b></span><span class="fl">TikTok</span></a>
+</section>
+
+<section id="play" class="hide">
+  <div class="top"><span id="qn"></span><span id="sc"></span></div>
+  <div class="bar"><i id="pg"></i></div>
+  <div class="bar hide" id="tb"><i id="tf"></i></div>
+  <div class="card q">
+    <div class="dt" id="dt"></div><div class="sit" id="sit"></div>
+    <div class="nm" id="nm"></div><div class="ask">এই হিসাব কোন পক্ষে লিখবে?</div>
+  </div>
+  <div class="tacc" id="tacc">
+    <button class="d" id="bd">ডেবিট<small>বাম পক্ষ · ←</small></button>
+    <button class="c" id="bc">ক্রেডিট<small>ডান পক্ষ · →</small></button>
+  </div>
+  <div id="fb" class="hide"></div>
+  <button class="go hide" id="nx">পরের প্রশ্ন</button>
+</section>
+
+<section id="end" class="hide">
+  <h1>ফলাফল</h1>
+  <div class="card"><div class="score" id="fs"></div><p id="fm" style="text-align:center;font-weight:600"></p><p class="dim" id="ft" style="text-align:center"></p></div>
+  <button class="go" id="again">আবার খেলো</button>
+  <h2>ধরন অনুযায়ী দক্ষতা</h2><div class="card" id="st"></div>
+  <h2>উত্তরের বিশ্লেষণ</h2>
+  <div class="flt"><button id="fa" class="on">সব</button><button id="fw">শুধু ভুলগুলো</button></div>
+  <div id="rv"></div>
+</section>
+</main>
+<script>
+const NUM='০১২৩৪৫৬৭৮৯',bn=n=>String(n).replace(/\d/g,d=>NUM[d]);
+const fmt=n=>{let s=String(n),l=s.slice(-3),r=s.slice(0,-3);if(r)l=r.replace(/\B(?=(\d{2})+(?!\d))/g,',')+','+l;return bn(l)};
+const MON=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর'];
+const $=id=>document.getElementById(id),SIDE={D:'ডেবিট',C:'ক্রেডিট'};
+const TY={A:{n:'সম্পদ',up:'D'},L:{n:'দায়',up:'C'},C:{n:'মূলধন',up:'C'},W:{n:'উত্তোলন',up:'D'},I:{n:'আয়',up:'C'},E:{n:'ব্যয়',up:'D'}};
+const RULE={A:'সম্পদ বাড়লে ডেবিট, কমলে ক্রেডিট।',L:'দায় বাড়লে ক্রেডিট, কমলে ডেবিট।',C:'মূলধন বাড়লে ক্রেডিট, কমলে ডেবিট।',W:'উত্তোলনে মালিকের মূলধন কমে, তাই বাড়লে ডেবিট।',I:'আয় বাড়লে ক্রেডিট, কমলে ডেবিট।',E:'ব্যয় বাড়লে ডেবিট, কমলে ক্রেডিট।'};
+const G=[['নগদান','A'],['ব্যাংক জমা','A'],['প্রাপ্য বিল','A'],['দেনাদার','A'],['যন্ত্রপাতি','A'],['ভূমি ও দালান','A'],['আসবাবপত্র','A'],['মজুদ পণ্য','A'],['যানবাহন','A'],['সুনাম','A'],['হাতে নগদ','A'],['বিনিয়োগ','A'],['পাওনাদার','L'],['প্রদেয় বিল','L'],['ব্যাংক ঋণ','L'],['দীর্ঘমেয়াদি ঋণ','L'],['প্রদেয় লভ্যাংশ','L'],['ব্যাংক জমাতিরিক্ত (ওভারড্রাফট)','L'],['মূলধন','C'],['সাধারণ সঞ্চিতি','C'],['উত্তোলন','W'],['বিক্রয়','I'],['কমিশন আয়','I'],['সুদ আয়','I'],['ভাড়া আয়','I'],['বিবিধ আয়','I'],['বাট্টা প্রাপ্ত','I'],['ক্রয়','E'],['বেতন ও মজুরি','E'],['ভাড়া ব্যয়','E'],['বিজ্ঞাপন ব্যয়','E'],['সুদ ব্যয়','E'],['বিদ্যুৎ বিল','E'],['পরিবহন ব্যয়','E'],['আনুষঙ্গিক ব্যয়','E'],['বিক্রয় ফেরত','E'],['বাট্টা প্রদত্ত','E'],['মেরামত ব্যয়','E']];
+// [নাম, ধরন, উত্তর, প্রশ্ন, কারণ, সমন্বয়?]
+const S=[
+['সমাপনী মজুদ পণ্য','A','D','বছরশেষের সমন্বয়: সমাপনী মজুদ পণ্য {a} টাকা নির্ণয় হলো (সমন্বয় জাবেদা)।','সমাপনী মজুদ চলতি সম্পদ। সমন্বয় জাবেদায় সমাপনী মজুদ পণ্য হিসাব ডেবিট ও বাণিজ্য হিসাব ক্রেডিট হয়। স্থিতিপত্রেও এটি সম্পদ পক্ষে যায়।',1],
+['সমাপনী মজুদ পণ্য (বাণিজ্য হিসাবে)','T','C','বাণিজ্য হিসাব তৈরি হচ্ছে। সমাপনী মজুদ {a} টাকা কোন পক্ষে বসবে?','বাণিজ্য হিসাবে সমাপনী মজুদ বিক্রয়ের মতো ক্রেডিট পক্ষে যায়, কারণ এটি বিক্রি না হওয়া পণ্যের খরচ বাদ দেয়।',1],
+['প্রারম্ভিক মজুদ পণ্য (বাণিজ্য হিসাবে)','T','D','বাণিজ্য হিসাব তৈরি হচ্ছে। প্রারম্ভিক মজুদ {a} টাকা কোন পক্ষে বসবে?','প্রারম্ভিক মজুদ বছরের শুরুতে থাকা পণ্য, যা বিক্রয়যোগ্য পণ্যের খরচ বাড়ায়। তাই বাণিজ্য হিসাবের ডেবিট পক্ষে যায়।',1],
+['অবচয়','E','D','বছরশেষে যন্ত্রপাতির অবচয় {a} টাকা ধার্য হলো।','অবচয় একটি ব্যয়। ব্যয় বাড়লে ডেবিট। জাবেদা: অবচয় হিসাব ডেবিট, সম্পদ বা অবচয় সঞ্চিতি হিসাব ক্রেডিট।',1],
+['অবচয় সঞ্চিতি','L','C','বছরশেষে অবচয় বাবদ {a} টাকা সঞ্চিতি রাখা হলো।','অবচয় সঞ্চিতি সম্পদের মূল্য কমানোর বিপরীত হিসাব, তাই ক্রেডিট পক্ষে যায়।',1],
+['অনাদায়ী পাওনা সঞ্চিতি','L','C','বছরশেষে দেনাদারদের জন্য {a} টাকা অনাদায়ী পাওনা সঞ্চিতি রাখা হলো।','সঞ্চিতি দেনাদার সম্পদের বিপরীত হিসাব, তাই ক্রেডিট। জাবেদা: কুঋণ ডেবিট, সঞ্চিতি ক্রেডিট।',1],
+['কুঋণ','E','D','একজন দেনাদারের {a} টাকা আদায় অসম্ভব বলে অবলোপন করা হলো।','কুঋণ একটি ব্যয়। ব্যয় বাড়লে ডেবিট।',1],
+['বকেয়া বেতন','L','C','মাসের শেষে {a} টাকা বেতন পরিশোধ হয়নি। সমন্বয় জাবেদা দাও।','অপরিশোধিত বেতন দায়। দায় বাড়লে ক্রেডিট। জাবেদা: বেতন ডেবিট, বকেয়া বেতন ক্রেডিট।',1],
+['অগ্রিম বীমা প্রিমিয়াম','A','D','পরের সময়ের জন্য আগাম {a} টাকা বীমা প্রিমিয়াম দেওয়া হয়েছে।','অগ্রিম দেওয়া খরচ ভবিষ্যতে সুবিধা দেবে, তাই সম্পদ। সম্পদ বাড়লে ডেবিট।',1],
+['অর্জিত সুদ আয় (প্রাপ্য)','A','D','বছরশেষে {a} টাকা সুদ অর্জিত হয়েছে কিন্তু এখনো পাওয়া যায়নি।','অর্জিত কিন্তু অনাদায়ী আয় প্রাপ্য, তাই সম্পদ। সম্পদ বাড়লে ডেবিট। জাবেদা: অর্জিত আয় ডেবিট, সুদ আয় ক্রেডিট।',1],
+['অগ্রিম প্রাপ্ত ভাড়া','L','C','ভাড়াটিয়া আগাম {a} টাকা ভাড়া দিয়েছে, যা এখনো অর্জিত হয়নি।','সেবা না দিয়ে পাওয়া টাকা দায়, আয় নয়। দায় বাড়লে ক্রেডিট।',1],
+['মূলধন (নিট মুনাফা স্থানান্তর)','C','C','বছরশেষে নিট মুনাফা {a} টাকা লাভ-ক্ষতি হিসাব থেকে মূলধনে স্থানান্তর হলো।','নিট মুনাফা মালিকের মূলধন বাড়ায়। মূলধন বাড়লে ক্রেডিট। জাবেদা: লাভ-ক্ষতি হিসাব ডেবিট, মূলধন ক্রেডিট।',1],
+['উত্তোলন','W','D','মালিক ব্যক্তিগত কাজে ব্যবসা থেকে {a} টাকা নগদ তুলেছেন।','উত্তোলন মূলধন কমায় বলে ডেবিট পক্ষে লেখা হয়। জাবেদা: উত্তোলন ডেবিট, নগদান ক্রেডিট।',0],
+['মূলধন (নতুন বিনিয়োগ)','C','C','মালিক ব্যবসায় নতুন {a} টাকা নগদ মূলধন দিয়েছেন।','মূলধন বাড়লে ক্রেডিট। সঙ্গে নগদান হিসাব ডেবিট হবে।',0],
+['ক্রয় ফেরত','I','C','সরবরাহকারীকে {a} টাকার ক্রয়কৃত পণ্য ফেরত দেওয়া হলো।','ক্রয় ফেরত ক্রয়ের বিপরীত হিসাব। ক্রয় ডেবিট, তাই ক্রয় ফেরত ক্রেডিট।',0],
+['বিক্রয় ফেরত','E','D','ক্রেতা {a} টাকার বিক্রীত পণ্য ফেরত পাঠিয়েছে।','বিক্রয় ফেরত বিক্রয়ের বিপরীত হিসাব। বিক্রয় ক্রেডিট, তাই বিক্রয় ফেরত ডেবিট।',0],
+['বাট্টা প্রদত্ত','E','D','দেনাদার নগদে পরিশোধ করায় তাকে {a} টাকা বাট্টা দেওয়া হলো।','বাট্টা প্রদত্ত ব্যবসার ব্যয়, তাই ডেবিট।',0],
+['বাট্টা প্রাপ্ত','I','C','পাওনাদারকে নগদে পরিশোধ করায় {a} টাকা বাট্টা পাওয়া গেল।','বাট্টা প্রাপ্ত ব্যবসার আয়, তাই ক্রেডিট।',0],
+['আসবাবপত্র','A','D','ধারে {a} টাকার আসবাবপত্র কেনা হলো।','আসবাবপত্র সম্পদ, বাড়লে ডেবিট। সরবরাহকারী পাওনাদার ক্রেডিট হবে।',0],
+['পাওনাদার','L','C','ধারে {a} টাকার পণ্য কেনা হলো। সরবরাহকারীর হিসাব কোন পক্ষে?','ধারে কিনলে দায় বাড়ে, তাই পাওনাদার ক্রেডিট।',0],
+['ব্যাংক জমা','A','D','ব্যবসা {a} টাকার চেক ব্যাংকে জমা দিয়েছে।','ব্যাংক জমা সম্পদ। জমা বাড়লে ডেবিট।',0],
+['দেনাদার','A','C','দেনাদার {a} টাকা নগদে শোধ করেছে। দেনাদারের হিসাব কোন পক্ষে?','পাওনা আদায়ে দেনাদার সম্পদ কমে, তাই ক্রেডিট। নগদান ডেবিট হবে।',0],
+['পাওনাদার','L','D','পাওনাদারকে {a} টাকা নগদে পরিশোধ করা হলো। পাওনাদারের হিসাব কোন পক্ষে?','দায় পরিশোধে দায় কমে, তাই পাওনাদার ডেবিট। নগদান ক্রেডিট হবে।',0]
+];
+const MODES=[{k:'q10',n:'ক্লাসিক',d:'১০টি প্রশ্ন, সব ধরনের হিসাব',N:10},{k:'q20',n:'ম্যারাথন',d:'২০টি প্রশ্ন, পুরো সিলেবাস',N:20},{k:'tm',n:'টাইমড',d:'প্রতি প্রশ্নে ১২ সেকেন্ড',N:15,T:12},{k:'adj',n:'বছরশেষের সমন্বয়',d:'মজুদ, অবচয়, সঞ্চিতি, অগ্রিম ও বকেয়া',N:10,adj:1}];
+let mode=MODES[0],Q=[],A=[],i=0,t0=0,tmr=null,tl=0,locked=false;
+$('modes').innerHTML=MODES.map((m,k)=>'<button class="mode'+(k?'':' on')+'" data-k="'+k+'"><b>'+m.n+'</b><span>'+m.d+'</span></button>').join('');
+function showBest(){let b='';try{b=localStorage.getItem('dcb_'+mode.k)||''}catch(e){}$('best').textContent=b?'এই মোডে তোমার সেরা স্কোর: '+bn(b):''}
+$('modes').onclick=e=>{const b=e.target.closest('.mode');if(!b)return;mode=MODES[b.dataset.k];document.querySelectorAll('.mode').forEach(x=>x.classList.toggle('on',x===b));showBest()};
+showBest();
+const sec=id=>['start','play','end'].forEach(s=>$(s).classList.toggle('hide',s!==id));
+const rnd=n=>Math.floor(Math.random()*n);
+function dateFor(adj){return adj?['৩০ জুন ২০২৬ (অর্থবছর শেষ)','৩১ ডিসেম্বর ২০২৬ (বছরশেষ)'][rnd(2)]:bn(1+rnd(28))+' '+MON[rnd(10)]+' ২০২৬'}
+function amt(){return fmt((10+rnd(990))*500)}
+function build(){
+ let pool=[];
+ const gen=G.map(([name,t])=>({name,t,g:1})),sp=S.map(([name,t,ans,tx,why,adj])=>({name,t,ans,tx,why,adj}));
+ pool=mode.adj?sp.filter(x=>x.adj):[...gen,...sp];
+ pool.sort(()=>Math.random()-.5);
+ const used=new Set();
+ Q=[];for(const x of pool){if(Q.length>=mode.N)break;if(used.has(x.name+(x.tx||'')))continue;used.add(x.name+(x.tx||''));
+  if(x.g){const T=TY[x.t],dec=(x.t==='A'||x.t==='L'||x.t==='C')&&x.name!=='মূলধন'&&Math.random()<.35;
+   const ans=dec?(T.up==='D'?'C':'D'):T.up;
+   Q.push({name:x.name,t:x.t,ans,dec,date:dateFor(0),sit:T.n+' হিসাব, পরিমাণ '+(dec?'কমছে':'বাড়ছে'),why:x.name+' একটি '+T.n+' হিসাব। '+RULE[x.t]+' এখানে পরিমাণ '+(dec?'কমছে':'বাড়ছে')+', তাই সঠিক পক্ষ '+SIDE[ans]+'।'})}
+  else Q.push({name:x.name,t:x.t,ans:x.ans,date:dateFor(x.adj),sit:x.tx.replace('{a}',amt()),why:x.why})}
+}
+const TN={A:'সম্পদ',L:'দায় ও সঞ্চিতি',C:'মূলধন',W:'উত্তোলন',I:'আয়',E:'ব্যয়',T:'বাণিজ্য হিসাব'};
+function ask(){
+ const q=Q[i];locked=false;$('fb').classList.add('hide');$('nx').classList.add('hide');$('tacc').classList.remove('hide');
+ $('qn').textContent='প্রশ্ন '+bn(i+1)+' / '+bn(Q.length);$('sc').textContent=TN[q.t];
+ $('pg').style.width=(i/Q.length*100)+'%';$('dt').textContent=q.date;$('sit').textContent=q.sit;$('nm').textContent=q.name;
+ clearInterval(tmr);$('tb').classList.toggle('hide',!mode.T);
+ if(mode.T){tl=mode.T*1000;const st=Date.now();tmr=setInterval(()=>{const r=tl-(Date.now()-st);$('tf').style.width=Math.max(0,r/tl*100)+'%';if(r<=0){clearInterval(tmr);pick(null)}},100)}
+}
+function pick(s){
+ if(locked)return;locked=true;clearInterval(tmr);A.push(s);const q=Q[i],ok=s===q.ans;
+ if($('inst').checked){
+  $('tacc').classList.add('hide');const f=$('fb');f.className='fb '+(ok?'ok':'no');
+  f.innerHTML='<b>'+(ok?'✔ সঠিক!':(s?'✘ ভুল':'⏱ সময় শেষ'))+' সঠিক পক্ষ: '+SIDE[q.ans]+'</b><div style="font-size:14px;margin-top:4px"></div>';
+  f.lastChild.textContent=q.why;$('nx').classList.remove('hide');$('nx').textContent=i+1<Q.length?'পরের প্রশ্ন':'ফলাফল দেখো'}
+ else next()}
+function next(){i++;i<Q.length?ask():finish()}
+function finish(){
+ clearInterval(tmr);sec('end');let sc=0;const by={};
+ Q.forEach((q,k)=>{const ok=A[k]===q.ans;if(ok)sc++;(by[q.t]=by[q.t]||[0,0])[1]++;if(ok)by[q.t][0]++});
+ const sec_=Math.round((Date.now()-t0)/1000),n=Q.length,pc=Math.round(sc/n*100);
+ $('fs').textContent=bn(sc)+' / '+bn(n);
+ $('fm').textContent=pc===100?'অসাধারণ! তুমি ডেবিট–ক্রেডিটের মাস্টার।':pc>=80?'দারুণ! আর একটু অনুশীলনেই নিখুঁত।':pc>=50?'ভালো চেষ্টা। ভুলগুলো দেখে নাও।':'নিয়মগুলো আবার পড়ে নতুন করে চেষ্টা করো।';
+ $('ft').textContent='সঠিকতা '+bn(pc)+'% · সময় লেগেছে '+bn(Math.floor(sec_/60))+' মিনিট '+bn(sec_%60)+' সেকেন্ড';
+ try{const kk='dcb_'+mode.k;if(sc>(+localStorage.getItem(kk)||0)){localStorage.setItem(kk,sc);}}catch(e){}
+ $('st').innerHTML=Object.keys(by).map(k=>{const [a,b]=by[k];return '<div class="stat"><span>'+TN[k]+'</span><div class="tr"><i style="width:'+a/b*100+'%"></i></div><span>'+bn(a)+'/'+bn(b)+'</span></div>'}).join('');
+ renderRev(0);scrollTo(0,0)}
+function renderRev(w){
+ const rv=$('rv');rv.innerHTML='';$('fa').classList.toggle('on',!w);$('fw').classList.toggle('on',!!w);let c=0;
+ Q.forEach((q,k)=>{const ok=A[k]===q.ans;if(w&&ok)return;c++;
+  const d=document.createElement('div');d.className='rev '+(ok?'ok':'no');
+  d.innerHTML='<div class="tag">'+(ok?'✔ সঠিক':(A[k]?'✘ ভুল':'⏱ সময় শেষ'))+'</div><b>'+bn(k+1)+'. '+q.name+'</b><div class="s"></div><div>তোমার উত্তর: '+(A[k]?SIDE[A[k]]:'উত্তর দাওনি')+(ok?'':' · সঠিক: <b>'+SIDE[q.ans]+'</b>')+'</div><div class="why"></div>';
+  d.querySelector('.s').textContent=q.date+' · '+q.sit;d.querySelector('.why').textContent=(ok?'কেন সঠিক: ':'কেন ভুল: ')+q.why;rv.appendChild(d)});
+ if(!c)rv.innerHTML='<p class="dim">কোনো ভুল নেই। চমৎকার!</p>'}
+function start(){build();i=0;A=[];t0=Date.now();sec('play');ask()}
+$('begin').onclick=start;$('again').onclick=()=>{sec('start');showBest();scrollTo(0,0)};
+$('bd').onclick=()=>pick('D');$('bc').onclick=()=>pick('C');$('nx').onclick=next;
+$('fa').onclick=()=>renderRev(0);$('fw').onclick=()=>renderRev(1);
+addEventListener('keydown',e=>{if($('play').classList.contains('hide'))return;
+ if(e.key==='ArrowLeft'||e.key==='d')pick('D');else if(e.key==='ArrowRight'||e.key==='c')pick('C');
+ else if((e.key==='Enter'||e.key===' ')&&!$('nx').classList.contains('hide')){e.preventDefault();next()}});
+</script>
+</body>
+</html>
